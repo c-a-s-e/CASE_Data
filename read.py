@@ -2,7 +2,9 @@ import csv
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.integrate as integrate
+import seaborn as sns
 
+sns.set()
 with open('data.csv') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     line_count = 0
@@ -23,22 +25,17 @@ with open('data.csv') as csv_file:
     time = time / 1000
     velocity = integrate.cumtrapz(acceleration, time)
     distance = integrate.cumtrapz(velocity, time[:-1])
-    plt.plot(time, acceleration, '-b')
-    plt.plot(time, acceleration, 'ro', markersize=3)
-    plt.xlabel("time (s)")
-    plt.ylabel("z-acceleration (m/s^2)")
-    plt.savefig("accel.png")
-    plt.show()
-    plt.figure()
-    plt.plot(time[:-1], velocity, '-g')
-    plt.xlabel('time (s)')
-    plt.ylabel('velocity (m/s)')
-    plt.savefig("velocity.png")
-    plt.show()
-    plt.figure()
-    plt.plot(time[:-2], distance, '-b')
-    plt.xlabel('time (s)')
-    plt.ylabel('depth (m)')
-    plt.savefig('distance.png')
-    plt.show()
+    fig, (p1, p2, p3) = plt.subplots(1, 3, figsize=(15, 5))
+    p1.plot(time, acceleration, '-')
+    p1.plot(time, acceleration, 'o', markersize=3)
+    p1.set_title('time (s) vs z-acceleration (m/s^2)')
+
+    p2.plot(time[:-1], velocity, '-')
+    p2.set_title('time (s) vs velcoty (m/s)')
+
+    p3.plot(time[:-2], distance, '-')
+    p3.set_title('time (s) vs depth (m)')
+
+    fig.savefig("full.png")
+    fig.show()
     print(f'Processed {line_count} lines.')
